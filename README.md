@@ -157,7 +157,7 @@ module.exports = async function (provider: anchor.AnchorProvider) {
 # surfpool testing :
 ```typescript
     "build:program": "anchor build && cp ./target/idl/solana_smart_contracts.json ../backend/solana_idl",         // @> command so that whenever you build something it will be available anywhere in the folder
-    "start:surfpool": "cp surfnet-state.sqlite surfnet-temp.sqlite surfpool start --rpc-url \"$(grep SOLANA_RPC_URL ./.env | cut -d '=' -f2-)\" --watch --db ./surfnet-temp.sqlite",          // <@ copy old state of surfpool to the new and test things
+    "start:surfpool": "touch surfnet-state.sqlite && cp surfnet-state.sqlite surfnet-temp.sqlite && surfpool start --rpc-url \"$(grep SOLANA_RPC_URL ./.env | cut -d '=' -f2-)\" --watch --db ./surfnet-temp.sqlite",// <@ copy old state of surfpool to the new and test things
     "commit:surfpool": "cp surfnet-temp.sqlite surfnet-state.sqlite",  // <@ above updated surfpool will be saved in the                                                                                      
     "deploy:surfpool": "anchor program deploy --provider.cluster http://127.0.0.1:8899",
     "migrate:surfpool": "anchor migrate --provider.cluster http://127.0.0.1:8899"
