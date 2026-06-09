@@ -146,7 +146,6 @@ module.exports = async function (provider: anchor.AnchorProvider) {
         const stateAccount = await program.account.lordsPotState.fetch(lordsPotStatePda);
         console.log(`[Deploy]: Protocol already initialized! Admin is currently: ${stateAccount.admin.toBase58()}`);
         console.log(`[Deploy]: Protocol already initialized! Admin is currently: ${stateAccount.bonusMax}`);
-        return;
     } catch (err) {
         console.log("[Deploy]: PDA state not found. Executing fresh initialization transaction...");
     }
