@@ -127,14 +127,7 @@ module.exports = async function (provider: anchor.AnchorProvider) {
       const tx = await program.methods
       .initialize(NORMAL_MAX, BONUS_MAX, TICKET_PRICE) // <@ params to send
       .accounts({      // below are the accounts you wanna send
-        // signer: provider.wallet.publicKey,
-        // lordsPotState: lordsPotStatePda,
-        // vaultAuthority: vaultAuthorityPda,
-        // vaultUsdcAccount: vaultUsdcAccount,
-        // usdcMint: DEVNET_USDC_MINT,
-        // systemProgram: anchor.web3.SystemProgram.programId,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        // associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        tokenProgram: TOKEN_PROGRAM_ID
       }).signers([ // <@ signers need to be added if you wanna sign ur tx using ur privatekey or else remove the signers section, rpc behind the scens using provider will put default wallet to sign it
         solanKeyPair
       ])
