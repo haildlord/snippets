@@ -153,6 +153,39 @@ module.exports = async function (provider: anchor.AnchorProvider) {
 }
 ```
 
+# Setting Custom Signer as the Default Signer either do Versioned or Below :
+```typescript
+// 1. Establish the default workspace provider context
+  anchor.setProvider(provider);
+
+  // 2. Extract the compiled IDL from the workspace before the swap
+  const workspaceProgram = anchor.workspace.SolanaSmartContracts;
+  const idl = workspaceProgram.idl;
+
+  // 3. Decode your specific private key from your backend environment variables
+  const solana_private_key_byteArray = bs58.decode(`${process.env.SOLANA_PRIVATE_KEY}`);
+  const solanaKeyPair: Keypair = Keypair.fromSecretKey(solana_private_key_byteArray);
+
+  // 4. Wrap your custom keypair into a new wallet and provider session
+  const customWallet = new anchor.Wallet(solanaKeyPair);
+  const customProvider = new anchor.AnchorProvider(
+    provider.connection, 
+    customWallet, 
+    anchor.AnchorProvider.defaultOptions()
+  );
+
+  // 5. Re-bind the global anchor context to your elite custom provider
+  anchor.setProvider(customProvider);
+
+  // 6. Instantiate the program instance using the modern two-argument signature
+  const program = new Program<SolanaSmartContracts>(idl, customProvider);
+
+  console.log("--------------------------------------------------");
+  console.log(`[Deploy]: Target Program ID: ${program.programId.toBase58()}`);
+  console.log(`[Deploy]: New Fee Payer / Admin Authority: ${customProvider.wallet.publicKey.toBase58()}`);
+  console.log("--------------------------------------------------");
+```
+
 # surfpool testing :
 ```typescript
     "build:program": "anchor build && cp ./target/idl/solana_smart_contracts.json ../backend/solana_idl",         // @> command so that whenever you build something it will be available anywhere in the folder
