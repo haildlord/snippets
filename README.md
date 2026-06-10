@@ -155,7 +155,9 @@ module.exports = async function (provider: anchor.AnchorProvider) {
 
 # Setting Custom Signer as the Default Signer either do Versioned or Below :
 ```typescript
-// 1. Establish the default workspace provider context
+  import {SolanaSmartContracts} from "../target/types/solana_smart_contracts";
+
+  // 1. Establish the default workspace provider context
   anchor.setProvider(provider);
 
   // 2. Extract the compiled IDL from the workspace before the swap
