@@ -21,7 +21,8 @@ import solana_idl from "../solana_idl/solana_smart_contracts.json" // <@ need ID
     this.wallet = new Wallet(solanKeyPair);
     this.connection = new Connection(solana_rpc_url, "confirmed");
     this.provider = new AnchorProvider(this.connection, this.wallet, { preflightCommitment: "confirmed" });
-    this.program = new Program(solana_idl, this.provider);
+    this.program = new Program(solana_idl as SolanaSmartContracts, this.provider);
+     this.statePda = PublicKey.findProgramAddressSync([Buffer.from("lords_pot_state")], this.program.programId)[0];  // a simple pda
 
 ```
 
