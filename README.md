@@ -1,3 +1,10 @@
+# dotenv config :
+import dotenv from 'dotenv';
+dotenv.config();
+--- if above is not working replace it with ---
+import 'dotenv/config';
+
+
 # Provider, Connection, Wallet, IDL(anchor)  Setup
 
 ```typescript
