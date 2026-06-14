@@ -189,6 +189,50 @@ module.exports = async function (provider: anchor.AnchorProvider) {
   console.log("--------------------------------------------------");
 ```
 
+# you can even create new program to attach differetnt sol payers 
+```typescript
+  const buyerProgram = new Program<SolanaSmartContracts>(idl, provider);
+  const buyer = provider.wallet;
+
+  function generateLottery() {
+    const numbers = new Set<number>();
+
+    while (numbers.size < 5) {
+        numbers.add(Math.floor(Math.random() * 30) + 1);
+    }
+
+    const special = Math.floor(Math.random() * 12) + 1;
+
+    return {
+        numbers: [...numbers].sort((a, b) => a - b),
+        special
+    };
+}
+
+  let tickets_to_buy = [];
+
+  for (let i = 0; i < 5; i++){
+    const {numbers, special} = generateLottery();
+    tickets_to_buy.push(
+      { normalBall: Buffer.from(numbers), 
+        bonusBall: special
+      }
+    );
+  }
+
+  console.log(tickets_to_buy);
+ 
+  const buyTx = await buyerProgram.methods
+  .buyTicket(tickets_to_buy)
+  .accounts({
+    signer : buyer.publicKey,
+    tokenProgram: TOKEN_PROGRAM_ID
+  })
+  .rpc();
+
+  console.log(`[Success]: LordsPot Protocol boought ticket! Transaction: ${buyTx}`);
+```
+
 # surfpool testing :
 ```typescript
     "build:program": "anchor build && cp ./target/idl/solana_smart_contracts.json ../backend/solana_idl",         // @> command so that whenever you build something it will be available anywhere in the folder
