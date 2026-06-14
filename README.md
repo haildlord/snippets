@@ -193,34 +193,6 @@ module.exports = async function (provider: anchor.AnchorProvider) {
 ```typescript
   const buyerProgram = new Program<SolanaSmartContracts>(idl, provider);
   const buyer = provider.wallet;
-
-  function generateLottery() {
-    const numbers = new Set<number>();
-
-    while (numbers.size < 5) {
-        numbers.add(Math.floor(Math.random() * 30) + 1);
-    }
-
-    const special = Math.floor(Math.random() * 12) + 1;
-
-    return {
-        numbers: [...numbers].sort((a, b) => a - b),
-        special
-    };
-}
-
-  let tickets_to_buy = [];
-
-  for (let i = 0; i < 5; i++){
-    const {numbers, special} = generateLottery();
-    tickets_to_buy.push(
-      { normalBall: Buffer.from(numbers), 
-        bonusBall: special
-      }
-    );
-  }
-
-  console.log(tickets_to_buy);
  
   const buyTx = await buyerProgram.methods
   .buyTicket(tickets_to_buy)
