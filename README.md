@@ -213,3 +213,19 @@ module.exports = async function (provider: anchor.AnchorProvider) {
     "deploy:surfpool": "anchor program deploy --provider.cluster http://127.0.0.1:8899",
     "migrate:surfpool": "anchor migrate --provider.cluster http://127.0.0.1:8899"
 ```
+
+
+# how to deSearalize the events from the solana blockchain, thrown at ur node.js script :
+```typescript
+import { PublicKey } from "@solana/web3.js";
+import IDL from "../solana_idl/solana_smart_contracts.json";
+const PROGRAM_ID = new PublicKey("6MCjqsDP4zjxxg2AWCrjDGeKYUiWL3xpG2ccUxLXaMB9");
+
+// usign idl as dictionary knowing how our smart contract is typed, its variables, logs, etc..
+const coder = new BorshCoder(IDL as any);
+// gives you json, filtered by programId & using the above type dictionry
+const eventParser = new EventParser(PROGRAM_ID, coder);
+
+
+
+```
