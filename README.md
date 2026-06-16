@@ -215,7 +215,7 @@ module.exports = async function (provider: anchor.AnchorProvider) {
 ```
 
 
-# how to deSearalize the events from the solana blockchain, thrown at ur node.js script :
+# how to deSearalize the events from the solana blockchain, thrown at ur node.js script, RAW format :
 ```typescript
 import { PublicKey } from "@solana/web3.js";
 import IDL from "../solana_idl/solana_smart_contracts.json";
@@ -225,6 +225,20 @@ const PROGRAM_ID = new PublicKey("6MCjqsDP4zjxxg2AWCrjDGeKYUiWL3xpG2ccUxLXaMB9")
 const coder = new BorshCoder(IDL as any);
 // gives you json, filtered by programId & using the above type dictionry
 const eventParser = new EventParser(PROGRAM_ID, coder);
+
+const transactions = req.body;
+const transaction = transactions[0]; // because req.body given by helius/solana is wrapped in []
+const logs = transaction.meta.logMessages;
+
+const events = eventParser.parseLogs(logs); // gives us something or array format, which also has event
+
+for (let event of events) {
+    if (event.name === "WebHook Event name") {
+        // Extract the decoded data
+        const eventData = event.data as any;
+    }
+}
+
 ```
 
 # Redis 
