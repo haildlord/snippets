@@ -311,12 +311,21 @@ export default ticketWorker;
     npm install @prisma/client
     npx prisma init
 
-3) view Database UI :
+3) update schema.prisma :
+   ```difff
+    generator client {
+      - provider = "prisma-client"
+      + provider = "prisma-client-js"
+      - output   = "../generated/prisma"
+    }
+   ```
+
+5) view Database UI :
     npx prisma studio
 
-4) add this in .env file -> DATABASE_URL="postgresql://postgres:admin@123@localhost:5432/lordspot_db?schema=public"
+6) add this in .env file -> DATABASE_URL="postgresql://postgres:admin@123@localhost:5432/lordspot_db?schema=public"
 
-5) after writing schema run -> `npx prisma migrate dev --name init_ticket_schema` to generate the sql query & get it executed in the database both at same time
+7) after writing schema run -> `npx prisma migrate dev --name init_ticket_schema` to generate the sql query & get it executed in the database both at same time
 
 ```typescript
 6) import { PrismaClient } from "../generated/prisma/client";
