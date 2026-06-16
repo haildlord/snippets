@@ -246,6 +246,18 @@ const eventParser = new EventParser(PROGRAM_ID, coder);
 
 ```typescript
 6) import { PrismaClient } from "../generated/prisma/client";
+    const prisma = new PrismaClient();
+
+    try {
+    // 8. Bulk insert everything into PostgreSQL instantly
+    const inserted = await prisma.ticket.createMany({
+        data: [], // array of json with column names as key.
+        skipDuplicates: true // Safety net: don't crash if a unique ID collides, but unique id is database generated remove it
+    });
+    }catch(err){
+        throw error
+    }
+
 ```
 
 
