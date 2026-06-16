@@ -227,6 +227,45 @@ const coder = new BorshCoder(IDL as any);
 const eventParser = new EventParser(PROGRAM_ID, coder);
 ```
 
+# Redis 
+### Pushing in the Queue
+docker run -d --name solana-redis -p 6379:6379 redis/redis-stack-server:latest
+> docker run: Tells Docker to create and start a new container.
+-d: Stands for "detached" mode. This means the container runs quietly in the background, freeing up your terminal window.
+--name solana-redis: Gives your container a friendly name so you can find it later.
+-p 6379:6379: Maps port 6379 inside the container to port 6379 on your actual Mac. This allows your Express code (127.0.0.1:6379) to talk to it.
+redis/redis-stack-server:latest: The exact pre-packaged image to download. redis-stack is awesome because it also includes a built-in visual dashboard tool.
+
+> Verify It Is Running : docker ps
+CONTAINER ID   IMAGE                             COMMAND                  STATUS          PORTS      NAMES
+a1b2c3d4e5f6   redis/redis-stack-server:latest   "/entrypoint.sh"         Up 5 seconds    0.0.0.0:6379->6379/tcp   solana-redis
+
+> To stop docker : docker stop solana-redis
+  To start docker : docker start solana-redis
+  To delete : docker rm -f solana-redis
+
+
+
+```typescript
+import { Queue } from "bullmq";
+import IoRedis from "ioredis";
+
+const redisConnection = new IoRedis({
+    port: 6379,
+    host: "127.0.0.1"
+})
+
+const ticketQueue = new Queue("lordsQueue", { connection: redisConnection});
+await ticketQueue.add("process-solana-logs", {
+    var1_u_wanna_push, var2_u_wanna_push
+}, {
+    attempts: 3,  // Automatically retry 3 times if your database crashes
+    backoff: 5000 // Wait 5 seconds between each database retry attempt
+})
+```
+
+### Getting from the Queue
+
 
 # Prisma
 
@@ -252,7 +291,7 @@ const eventParser = new EventParser(PROGRAM_ID, coder);
     // 8. Bulk insert everything into PostgreSQL instantly
     const inserted = await prisma.ticket.createMany({
         data: [], // array of json with column names as key.
-        skipDuplicates: true // Safety net: don't crash if a unique ID collides, but unique id is database generated remove it
+        skipDuplicates: true // Safety net: don't crash if a unique ID collides, but if unique id is database generated remove it
     });
     }catch(err){
         throw error
@@ -261,7 +300,7 @@ const eventParser = new EventParser(PROGRAM_ID, coder);
 ```
 
 
-## Field Attributes (prefixed with `@`)
+#### Field Attributes (prefixed with `@`)
 
 | Attribute | Description |
 |---|---|
@@ -276,7 +315,7 @@ const eventParser = new EventParser(PROGRAM_ID, coder);
 
 ---
 
-## Block Attributes (prefixed with `@@`)
+#### Block Attributes (prefixed with `@@`)
 
 | Attribute | Description |
 |---|---|
@@ -286,7 +325,7 @@ const eventParser = new EventParser(PROGRAM_ID, coder);
 
 ---
 
-## `@default()` Functions
+#### `@default()` Functions
 
 | Function | Notes |
 |---|---|
@@ -301,7 +340,7 @@ const eventParser = new EventParser(PROGRAM_ID, coder);
 
 ---
 
-## Scalar Field Types
+#### Scalar Field Types
 
 | Prisma Type | Description | JS Type |
 |---|---|---|
@@ -319,7 +358,7 @@ const eventParser = new EventParser(PROGRAM_ID, coder);
 
 ---
 
-## Type Modifiers
+#### Type Modifiers
 
 | Modifier | Meaning |
 |---|---|
@@ -330,7 +369,7 @@ const eventParser = new EventParser(PROGRAM_ID, coder);
 
 ---
 
-## Native Database Type Attributes (`@db.*`) — PostgreSQL Examples
+#### Native Database Type Attributes (`@db.*`) — PostgreSQL Examples
 
 | Prisma Type | Native Attribute |
 |---|---|
