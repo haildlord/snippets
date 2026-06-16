@@ -225,14 +225,10 @@ const PROGRAM_ID = new PublicKey("6MCjqsDP4zjxxg2AWCrjDGeKYUiWL3xpG2ccUxLXaMB9")
 const coder = new BorshCoder(IDL as any);
 // gives you json, filtered by programId & using the above type dictionry
 const eventParser = new EventParser(PROGRAM_ID, coder);
-
-
-
 ```
 
 
 # Prisma
-```typescript
 
 1) docker run -d --name solana-postgress-sql -p 5432:5432 -e POSTGRES_PASSWORD=admin@123 -e POSTGRES_DB=lordspot_db postgres
 
@@ -247,6 +243,10 @@ const eventParser = new EventParser(PROGRAM_ID, coder);
 4) add this in .env file -> DATABASE_URL="postgresql://postgres:admin@123@localhost:5432/lordspot_db?schema=public"
 
 5) after writing schema run -> `npx prisma migrate dev --name init_ticket_schema` to generate the sql query & get it executed in the database both at same time
+
+```typescript
+6) import { PrismaClient } from "../generated/prisma/client";
+```
 
 
 ## Field Attributes (prefixed with `@`)
@@ -349,6 +349,3 @@ You will run npx prisma migrate dev --name add_user_profile.
 Prisma will look at the database and say, "Ah, the Ticket table is already there. I only need to build the User table."
 It will create a brand new folder named add_user_profile with a second migration.sql file containing only the CREATE TABLE "User" command.
 
-
-
-```
