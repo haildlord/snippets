@@ -264,8 +264,29 @@ await ticketQueue.add("process-solana-logs", {
 })
 ```
 
-### Getting from the Queue
+### Fetching from the Queue
 
+```typescript
+import { Worker, Job } from "bullmq";
+
+// 2. Connect to Redis (Door 6379)
+const redisConnection = new IoRedis({
+    host: "127.0.0.1",
+    port: 6379,
+    maxRetriesPerRequest: null // Required by BullMQ to prevent timeout errors
+});
+
+// 5. Build the actual worker that listens to the queue
+const ticketWorker = new Worker(
+    "lordsQueue", // Must match the queue name in your webhookController
+    async (job: Job) => {
+    const { var1_u_wanna_push, var2_u_wanna_push } = job.data;
+
+},{ connection: redisConnection } // Tell the worker to use the Redis connection we built in Step 1
+);
+
+export default ticketWorker;
+```
 
 # Prisma
 
@@ -290,7 +311,7 @@ await ticketQueue.add("process-solana-logs", {
     try {
     // 8. Bulk insert everything into PostgreSQL instantly
     const inserted = await prisma.ticket.createMany({
-        data: [], // array of json with column names as key.
+        data: [], // array of columns, where each column is in json fromat and the key of json is the column name.
         skipDuplicates: true // Safety net: don't crash if a unique ID collides, but if unique id is database generated remove it
     });
     }catch(err){
