@@ -332,11 +332,22 @@ const eventParser = new EventParser(PROGRAM_ID, coder);
 | `Json` | `@db.Json`, `@db.JsonB` |
 | `Bytes` | `@db.ByteA` |
 
-[[PostgreSQL Type Mapping](https://www.prisma.io/docs/orm/v6/overview/databases/postgresql#mapping-between-postgresql-database-column-types-to-prisma-orm-scalar-and-native-types)]
+1. Why did the database need to be running?
+You are completely right that it pushed no data (no lottery tickets). But it did push the structure.
+In databases, there are two types of SQL commands:
+DDL (Data Definition Language): Things like CREATE TABLE. This builds the empty shelves.
+DML (Data Manipulation Language): Things like INSERT INTO. This puts the boxes on the shelves.
+When you ran prisma migrate dev, Prisma did not just write that migration.sql file on your laptop. It immediately took that SQL, walked through Door 5432, and executed it inside your Docker database. If Docker was turned off, Prisma would have thrown a massive error saying: "I wrote the SQL, but I can't find the database to actually build the tables!" Right now, inside your Docker container, a perfectly formatted, empty Ticket table is officially sitting there waiting for data.
 
----
-
-> ⚠️ The knowledge sources do not contain the **complete** list of all keywords, attributes, and types. For the full reference, please visit the [Prisma Schema Reference](https://www.prisma.io/docs/orm/reference/prisma-schema-reference).
+2. Will future models go into the same migration.sql file?
+No, they will not! And this is why Prisma is so powerful.
+Prisma Migrations act exactly like Git Commits for your database.
+Think of what you just did as your "Initial Commit." You named it init_ticket_schema, so Prisma created a folder with a timestamp (something like 20240510123000_init_ticket_schema) and put the SQL for the Ticket table inside it.
+If tomorrow your boss says, "Hey, we need to add a User Profile table!", here is what will happen:
+You will add model User { ... } to your schema.prisma file.
+You will run npx prisma migrate dev --name add_user_profile.
+Prisma will look at the database and say, "Ah, the Ticket table is already there. I only need to build the User table."
+It will create a brand new folder named add_user_profile with a second migration.sql file containing only the CREATE TABLE "User" command.
 
 
 
