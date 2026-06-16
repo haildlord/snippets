@@ -312,13 +312,16 @@ export default ticketWorker;
     npx prisma init
 
 3) update schema.prisma :
-   ```difff
-    generator client {
-      - provider = "prisma-client"
-      + provider = "prisma-client-js"
-      - output   = "../generated/prisma"
-    }
-   ```
+   
+```diff
+generator client {
+-     provider = "prisma-client"
++     provider = "prisma-client-js"
+-     output   = "../generated/prisma"
+}
+```
+
+4) add the models & npx prisma generate // generates the prisma Client in a correct directory to be used by files
 
 5) view Database UI :
     npx prisma studio
@@ -328,8 +331,10 @@ export default ticketWorker;
 7) after writing schema run -> `npx prisma migrate dev --name init_ticket_schema` to generate the sql query & get it executed in the database both at same time
 
 ```typescript
-6) import { PrismaClient } from "../generated/prisma/client";
-    const prisma = new PrismaClient();
+6) import { PrismaClient } from "@prisma/client";
+    const prisma = new PrismaClient({  // <@ this might give you some error, just (Cmd + Shift + P) & TypeScript: Restart TS server, error gone
+        log: ['warn', 'error']
+    });
 
     try {
     // 8. Bulk insert everything into PostgreSQL instantly
