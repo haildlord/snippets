@@ -229,3 +229,115 @@ const eventParser = new EventParser(PROGRAM_ID, coder);
 
 
 ```
+
+
+# Prisma
+```typescript
+
+1) docker run -d --name solana-postgress-sql -p 5432:5432 -e POSTGRES_PASSWORD=admin@123 -e POSTGRES_DB=lordspot_db postgres
+
+2) installation :
+    npm install prisma --save-dev
+    npm install @prisma/client
+    npx prisma init
+
+3) view Database UI :
+    npx prisma studio
+
+4) add this in .env file -> DATABASE_URL="postgresql://postgres:admin@123@localhost:5432/lordspot_db?schema=public"
+
+5) after writing schema run -> `npx prisma migrate dev --name init_ticket_schema` to generate the sql query & get it executed in the database both at same time
+
+
+## Field Attributes (prefixed with `@`)
+
+| Attribute | Description |
+|---|---|
+| `@id` | Defines a single-field primary key |
+| `@default(...)` | Sets a default value |
+| `@unique` | Enforces uniqueness on a field |
+| `@map("...")` | Maps field to a different database column name |
+| `@relation(...)` | Defines a relation between models |
+| `@db.*` | Native database type attributes (e.g. `@db.VarChar(x)`, `@db.Text`, `@db.Boolean`) |
+
+[[Defining Attributes](https://www.prisma.io/docs/orm/prisma-schema/data-model/models#defining-attributes)]
+
+---
+
+## Block Attributes (prefixed with `@@`)
+
+| Attribute | Description |
+|---|---|
+| `@@unique([...])` | Enforces uniqueness across multiple fields |
+
+[[Defining Attributes](https://www.prisma.io/docs/orm/prisma-schema/data-model/models#defining-attributes)]
+
+---
+
+## `@default()` Functions
+
+| Function | Notes |
+|---|---|
+| `autoincrement()` | Relational databases only |
+| `cuid()` | Generates a cuid string |
+| `uuid()` | Generates a UUID string |
+| `ulid()` | Generates a ULID string |
+| `auto()` | MongoDB only (generates ObjectId) |
+| `now()` | Not in sources but commonly used |
+
+[[`@id` Examples](https://www.prisma.io/docs/orm/reference/prisma-schema-reference#examples-6)]
+
+---
+
+## Scalar Field Types
+
+| Prisma Type | Description | JS Type |
+|---|---|---|
+| `String` | Variable length text | `string` |
+| `Boolean` | True or false | `boolean` |
+| `Int` | Integer | `number` |
+| `BigInt` | Large integer | `bigint` |
+| `Float` | Floating point | `number` |
+| `Decimal` | Precise decimal | `Decimal` |
+| `DateTime` | Date and time | `Date` |
+| `Json` | JSON value | `object` |
+| `Bytes` | Binary data | `Buffer` |
+
+[[Scalar Types Reference](https://www.prisma.io/docs/orm/reference/prisma-schema-reference#model-field-scalar-types)]
+
+---
+
+## Type Modifiers
+
+| Modifier | Meaning |
+|---|---|
+| `?` | Optional field (nullable) |
+| `[]` | List/array field |
+
+[[Defining Fields](https://www.prisma.io/docs/orm/prisma-schema/data-model/models#defining-fields)]
+
+---
+
+## Native Database Type Attributes (`@db.*`) — PostgreSQL Examples
+
+| Prisma Type | Native Attribute |
+|---|---|
+| `String` | `@db.Text`, `@db.VarChar(x)`, `@db.Char(x)`, `@db.Uuid`, `@db.Xml`, `@db.Inet` |
+| `Boolean` | `@db.Boolean` |
+| `Int` | `@db.Int`, `@db.SmallInt` |
+| `BigInt` | `@db.BigInt` |
+| `Float` | `@db.Real`, `@db.DoublePrecision` |
+| `Decimal` | `@db.Decimal(x,y)`, `@db.Money` |
+| `DateTime` | `@db.Timestamp`, `@db.Date`, `@db.Timestamptz(x)` |
+| `Json` | `@db.Json`, `@db.JsonB` |
+| `Bytes` | `@db.ByteA` |
+
+[[PostgreSQL Type Mapping](https://www.prisma.io/docs/orm/v6/overview/databases/postgresql#mapping-between-postgresql-database-column-types-to-prisma-orm-scalar-and-native-types)]
+
+---
+
+> ⚠️ The knowledge sources do not contain the **complete** list of all keywords, attributes, and types. For the full reference, please visit the [Prisma Schema Reference](https://www.prisma.io/docs/orm/reference/prisma-schema-reference).
+
+
+
+```
