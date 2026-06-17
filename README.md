@@ -332,9 +332,7 @@ generator client {
 
 ```typescript
 6) import { PrismaClient } from "@prisma/client";
-    const prisma = new PrismaClient({  // <@ this might give you some error, just (Cmd + Shift + P) & TypeScript: Restart TS server, error gone
-        log: ['warn', 'error']
-    });
+    const prisma = new PrismaClient()  // <@ this might give you some error, just (Cmd + Shift + P) & TypeScript: Restart TS server, error gone;
 
     try {
     // 8. Bulk insert everything into PostgreSQL instantly
