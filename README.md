@@ -380,6 +380,24 @@ Instead, follow the commands below:
 - **When to use it**: Only in local development when your database becomes corrupted or heavily out of sync due to testing.
   **Warning**: Never run this command in production, as it will permanently delete all data.
 
+### 3. Client
+```typescript
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../generated/prisma/client";
+
+const connectionString = `${process.env.DATABASE_URL}`;
+
+const adapter = new PrismaPg({ connectionString });
+const prisma = new PrismaClient({ adapter });
+
+export { prisma }; // if creating a single point of return
+
+// Insert many :
+const inserted = await prisma.ticket.createMany({
+    data: [] // array of rows, where each row is a json of {colunnTitle: value}
+});
+```
+
 ### 5. view Database UI
 
 ```bash
