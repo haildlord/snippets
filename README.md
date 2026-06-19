@@ -346,6 +346,41 @@ export default ticketWorker;
 
 ## Prisma (very weird, error prone, read the below docs full to run any command)
 
+```typescript
+// `sql` is a `relational` database, that is a child table knows about it parent table, but parent does not
+enum OrderStatus {
+  QUEUED
+  PROCESSING
+  SUCCESS
+  FAILED
+}
+
+model RelayOrder {
+  hash            String      @id                    // primary key of this table   
+  signature       String      @unique                // just tells its gonna be unique per row
+  buyer           String      
+  lastBought      DateTime
+  status          OrderStatus @default(QUEUED)       // default enum is queued
+  
+  tickets         Ticket[]                           // only supported in prisa, to help you later find out which particular tickets belong to this relay row 
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model Ticket {
+  id              String      @id @default(uuid())  // uuid indicates, auto geneared eg : `ada9c21c-5ea0-4294-a34d-c2913b87df90`
+  
+  orderHash       String                            // this line and below line is what makes the connection btw child rows to a ( parent row of table relay )
+  relayOrder      RelayOrder  @relation(fields: [orderHash], references: [hash])  // this says orderHash field of this table is uniquely connected to a hash field of parnet, that is to say, a single relay hash field will be connected to multiple orderHash field
+  
+  bonusBall       Int
+  normalBalls     Int[]
+
+  onChainTicketId String?  
+}
+```
+
 ### 1. ur local database for the prisma to push
 
 ```bash
