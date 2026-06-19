@@ -394,6 +394,7 @@ Follow the official Prisma installation guide from [this link](https://www.prism
 Instead, follow the commands below:
 
 #### 1. `npx prisma generate` (The TypeScript Translator)
+### `npx prisma db push --force-reset` -- forcefully deletes the database contents and adds the new schema if there is to the database title and columns
 
 - **What it does**: Reads your `schema.prisma` file and generates the Prisma Client with full TypeScript types and autocomplete inside `node_modules/@prisma/client`.
 - **What it does NOT do**: It does **not** touch or modify your actual database.
