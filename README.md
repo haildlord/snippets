@@ -331,9 +331,9 @@ const redisConnection = new IoRedis({
 });
 
 // 5. Build the actual worker that listens to the queue
-const ticketWorker = new Worker(
-    "lordsQueue", // Must match the queue name in your webhookController
-    async (job: Job) => {
+export const webhookIngestWorker = new Worker(
+  'webhook-ingest',
+  async (job: Job<{ signature: string }>) => {
         const { var1_u_wanna_push, var2_u_wanna_push } = job.data;
     },
     { connection: redisConnection } // Tell the worker to use the Redis connection we built in Step 1
