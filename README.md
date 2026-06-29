@@ -308,7 +308,15 @@ const redisConnection = new IoRedis({
     host: "127.0.0.1"
 });
 
-const ticketQueue = new Queue("lordsQueue", { connection: redisConnection});
+export const ticketIngestQueue = new Queue('ticket-ingestion', {
+  connection: redisConnection,
+  defaultJobOptions: {
+    attempts: 10,
+    backoff: { type: 'exponential', delay: 3000 },
+    removeOnComplete: { count: 5000 },
+    removeOnFail: false, // keep failed — orders are money
+  },
+});
 
 await ticketQueue.add("process-solana-logs", {
     var1_u_wanna_push, var2_u_wanna_push
