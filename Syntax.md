@@ -10,6 +10,7 @@
   // if wanna print the whole JSON which console.log wont because of the depth issue use below :
   console.dir(transactions, { depth: null, colors: true });
 
-  
+  // search on it
+  ['QUEUED', 'RETRY_PENDING', 'DEFERRED', 'SOLANA_CONFIRMED'].includes(existing.status))
 
   ```
